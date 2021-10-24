@@ -1,6 +1,7 @@
 import middy from '../middlewares/middy';
 export * from '../models/mongooseDb';
 import { Posts } from '../models/posts';
+import pushEvent from '../models/pushEvent';
 
 async function createPost(event, context) {
   const { title, description } = event.body;
@@ -14,6 +15,7 @@ async function createPost(event, context) {
 
   try {
     await post.save();
+    await pushEvent('post:create', post);
   } catch (error) {
     console.error(error);
   }

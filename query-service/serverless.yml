@@ -3,6 +3,10 @@ service: query-service
 plugins:
   - serverless-bundle
 
+custom:
+  resources:
+    kinesisStreamArn: ${ssm:/ms_demo/kinesis_stream/arn}
+
 provider:
   lambdaHashingVersion: 20201221
   name: aws
@@ -13,6 +17,13 @@ provider:
   environment:
     DB_URL: ${ssm:/ms_demo/query/db_url}
     DB_NAME: queries
+    KINESIS_STREAM_NAME: ${ssm:/ms_demo/kinesis_stream/name}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - kinesis:PutRecord
+        - kinesis:PutRecords
+      Resource: ${self:custom.resources.kinesisStreamArn}
 
 functions:
   hello:
@@ -22,17 +33,16 @@ functions:
           method: GET
           path: /hello
 
-  # TO be removed
-  # createQuery:
-  #   handler: src/handlers/createQuery.handler
-  #   events:
-  #     - http:
-  #         method: POST
-  #         path: /query
-
   listAllCommentsByPost:
     handler: src/handlers/listAllCommentsByPost.handler
     events:
       - http:
           method: GET
           path: /posts/{postId}/comments
+
+  eventConsumer:
+    handler:  src/handlers/eventConsumer.handler
+    events:
+      - stream:
+          type: kinesis
+          arn: ${self:custom.resources.kinesisStreamArn}

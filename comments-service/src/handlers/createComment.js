@@ -1,6 +1,7 @@
 import middy from '../middlewares/middy';
 export * from '../models/mongooseDb';
 import { Comments } from '../models/Comments';
+import pushEvent from '../models/pushEvent';
 
 async function createComment(event, context) {
   const { postId, body } = event.body;
@@ -14,6 +15,7 @@ async function createComment(event, context) {
 
   try {
     await comment.save();
+    await pushEvent('comment:create', comment);
   } catch (error) {
     console.error(error);
   }
