@@ -10,7 +10,10 @@ provider:
   region: us-east-1
   memorySize: 256
   stage: ${opt:stage, 'v1'}
-  
+  environment:
+    DB_URL: ${ssm:/ms_demo/query/db_url}
+    DB_NAME: queries
+
 functions:
   hello:
     handler: src/handlers/hello.handler
@@ -18,3 +21,18 @@ functions:
       - http:
           method: GET
           path: /hello
+
+  # TO be removed
+  # createQuery:
+  #   handler: src/handlers/createQuery.handler
+  #   events:
+  #     - http:
+  #         method: POST
+  #         path: /query
+
+  listAllCommentsByPost:
+    handler: src/handlers/listAllCommentsByPost.handler
+    events:
+      - http:
+          method: GET
+          path: /posts/{postId}/comments
