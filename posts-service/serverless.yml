@@ -26,13 +26,6 @@ provider:
       Resource: ${self:custom.resources.kinesisStreamArn}
 
 functions:
-  hello:
-    handler: src/handlers/hello.handler
-    events:
-      - http:
-          method: GET
-          path: /hello
-
   createPost:
     handler: src/handlers/createPost.handler
     events:

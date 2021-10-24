@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 
-const post = {//TODO: add _id: ObjectId
+const post = {
+  _id: mongoose.Types.ObjectId,
   title: String,
   description: String,
   createdAt: { type: Date, default: Date.now }
 };
 
-const comment = {//TODO: add _id: ObjectId
+const comment = {
+  _id: mongoose.Types.ObjectId,
   body: String,
   createdAt: { type: Date, default: Date.now },
 };

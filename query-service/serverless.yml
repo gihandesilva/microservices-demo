@@ -26,12 +26,12 @@ provider:
       Resource: ${self:custom.resources.kinesisStreamArn}
 
 functions:
-  hello:
-    handler: src/handlers/hello.handler
+  listAllPostsWithComments:
+    handler: src/handlers/listAllPostsWithComments.handler
     events:
       - http:
           method: GET
-          path: /hello
+          path: /posts
 
   listAllCommentsByPost:
     handler: src/handlers/listAllCommentsByPost.handler
